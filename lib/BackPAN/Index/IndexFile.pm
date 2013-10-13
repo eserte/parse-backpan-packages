@@ -57,18 +57,10 @@ sub index_url_mtime {
 sub extract_index_file {
     my $self = shift;
 
-    # Archive::Extract is vulnerable to the ORS.
-    local $\;
+    require IO::Uncompress::Gunzip;
 
-    require Archive::Extract;
-
-    # Faster.  Say it twice to avoid the "used only once" warning.
-    local $Archive::Extract::PREFER_BIN;
-    $Archive::Extract::PREFER_BIN = 1;
-
-    my $ae = Archive::Extract->new( archive => $self->index_archive );
-    $ae->extract( to => $self->index_file )
-      or die "Problem extracting @{[ $self->index_archive ]}: @{[ $ae->error ]}";
+    IO::Uncompress::Gunzip::gunzip( $self->index_archive.'' => $self->index_file.'' )
+      or die "Problem extracting @{[ $self->index_archive ]}: $IO::Uncompress::Gunzip::GunzipError\n";
 
     # If the backpan index age is older than the TTL this prevents us
     # from immediately looking again.
