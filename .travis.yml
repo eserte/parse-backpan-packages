@@ -5,4 +5,7 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
-  - "5.8"
+## Test failure with 5.8.9 in 00compile.t;
+## seems to be related to https://rt.cpan.org/Ticket/Display.html?id=86267
+## Probably it will work again a new DBIx-Class (post-0.08250) is released.
+#  - "5.8"
